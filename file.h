@@ -119,3 +119,33 @@ int load_game(node **head1,node **head2,int *NumOfPlayers,int *turn,char **map_a
     fclose(file);
     return 0;
 }
+int read_dir(char ***address,char *suffix,int suffix_len,int *arrsize){
+    int len,i;
+    *arrsize=1;
+    struct dirent *de;
+    bool check;
+    DIR *dr = opendir("C:\\Users\\Adak\\Desktop\\FinalProject");
+    if (dr == NULL){
+        printf("Error");
+        return -1;
+    }
+    (*address)=(char **)malloc(sizeof(char *));
+    while ((de = readdir(dr)) != NULL){
+        len=de->d_namlen;
+        check=true;
+        for(i=0;i<suffix_len;i++)
+            if((de->d_name)[len-(suffix_len-i)]!=suffix[i])
+                check=false;
+        if(check){
+            ((*address)[(*arrsize)-1])=(char *)malloc((len+1)*sizeof(char));
+            for(i=0;i<len;i++)
+                (*address)[(*arrsize)-1][i]=de->d_name[i];
+            (*address)[(*arrsize)-1][len]='\0';
+            (*arrsize)++;
+            (*address)=(char **)realloc(*address,(*arrsize)*sizeof(char *));
+        }
+    }
+    (*arrsize)--;
+    closedir(dr);
+    return 0;
+}

@@ -28,9 +28,16 @@ void add_end(node *head,node *new_node){
     head->next=new_node;
     new_node->prev=head;
 }
-void print_nodes(node *head){
+void print_list(node *head){
     int i=1;
     for(;head->next!=NULL;head=head->next,i++)
         printf("%d)%s (%d,%d)\n",i,head->name,(head->pos).x,(head->pos).y);
     printf("%d)%s (%d,%d)",i,head->name,(head->pos).x,(head->pos).y);
+}
+int list_size(node *head){
+    int len=0;
+    for(;head->next!=NULL;head=head->next)
+        len++;
+    len++;
+    return len;
 }

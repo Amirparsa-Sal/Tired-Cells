@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <graphics.h>
+#include <stdbool.h>
+#include <dirent.h>
 #include "file.h"
 #include "linkedlist.h"
 void getstring(char **name){
