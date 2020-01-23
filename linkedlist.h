@@ -19,7 +19,7 @@ node* create_node(node *new_node,int x,int y,int energy,char *name){
     new_node->energy=energy;
     new_node->next=NULL;
     new_node->prev=NULL;
-    for(i=0;i<10;i++)
+    for(i=0;name[i]!='\0';i++)
         (new_node->name)[i]=name[i];
     return new_node;
 }
@@ -40,4 +40,38 @@ int list_size(node *head){
         len++;
     len++;
     return len;
+}
+void delete_node(node **head,char *name,int len){
+    int i;
+    node *tmp1=(*head),*tmp2=(*head);
+    char *nametmp=(char *)malloc(10*sizeof(char));
+    for(i=0;i<len;i++)
+        nametmp[i]=name[i];
+    for(i=len;i<10;i++)
+        nametmp[i]='\0';
+    if((*head)->next==NULL){
+        if(str_cmp((*head)->name,nametmp,10))
+            free((*head));
+        else
+            return;
+    }
+    else{
+        if(str_cmp((*head)->name,nametmp,10)){
+            (*head)->next->prev=NULL;
+            (*head)=(*head)->next;
+            free((*head)->prev);
+
+        }
+
+        do{
+            tmp2=tmp2->next;
+            if(str_cmp(tmp2->name,nametmp,10)){
+                tmp1->next=tmp2->next;
+                if(tmp2->next!=NULL)
+                    tmp2->next->prev=tmp1;
+                free(tmp2);
+            }
+            tmp1=tmp1->next;
+        }while(tmp2->next!=NULL);
+    }
 }
