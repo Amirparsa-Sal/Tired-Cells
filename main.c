@@ -35,8 +35,8 @@ int find_min(int a,int b,int c){
 }
 int movecell(node *my_node,char *direction,node* head1,node *head2,int n,int arr[n][n]){
     int x,y;
-    x=my_node->pos.x;
-    y=my_node->pos.y;
+    x=(my_node->pos).x;
+    y=(my_node->pos).y;
     if(x%2==1){
         if(str_cmp(direction,"NorthWest",9))
             direction="West";
@@ -93,59 +93,26 @@ int movecell(node *my_node,char *direction,node* head1,node *head2,int n,int arr
         else
             return 0;
     }
-    else if(str_cmp(direction,"East",9)){
+    else if(str_cmp(direction,"East",4)){
         if(CheckisAvailable(x+1,y,n,head1,head2,arr))
-            my_node->pos.x+=1;
+            (my_node->pos).x+=1;
         else
             return 0;
     }
-    else if(str_cmp(direction,"South",9)){
+    else if(str_cmp(direction,"South",5)){
         if(CheckisAvailable(x,y-1,n,head1,head2,arr))
-            my_node->pos.y-=1;
+            (my_node->pos).y-=1;
         else
             return 0;
     }
     return 1;
-}
-int check_random_move(node *my_node,int arrx[6],int arry[6],int n,node *head1,node *head2,int arr[n][n],int *dx,int *dy){
-    int valid=0,i,valids[6]={0},rnd;
-    for(i=0;i<6;i++){
-        if(CheckisAvailable((my_node->pos).x+arrx[i],(my_node->pos).y+arry[i],n,head1,head2,arr)){
-            valid++;
-            valids[valid-1]=i;
-        }
-    }
-    if(valid==0)
-        return 0;
-    rnd=rand()%valid;
-    (*dx)=arrx[rnd];
-    (*dy)=arry[rnd];
-    return 1;
-}
-int mitosis(node **my_node,node *head1,node *head2,node **newcell1,char *newcellname1,node **newcell2,char *newcellname2,int n,int arr[n][n]){
-    int dx,dy;
-    if((*my_node)->energy<80)
-        return 0;
-    int zojdirectionx[6]={-1,-1,0,0,1,1};
-    int zojdirectiony[6]={0,1,-1,1,0,1};
-    int farddirectionx[6]={-1,-1,0,0,1,1};
-    int farddirectiony[6]={0,-1,-1,1,0,-1};
-    int x,y,arrx,arry;
-    if(x%2==0){
-        if (!check_random_move(*my_node,zojdirectionx,zojdirectiony,n,head1,head2,arr,&dx,&dy))
-            return 0;
-    }
-    else if(x%2==1){
-        if (!check_random_move(*my_node,farddirectionx,farddirectiony,n,head1,head2,arr,&dx,&dy))
-            return 0;
-    }
-    x=((*my_node)->pos).x;
-    y=((*my_node)->pos).y;
-    (*newcell1)=create_node((*newcell1),x,y,40,newcellname1);
-    (*newcell2)=create_node((*newcell2),x+dx,y+dy,40,newcellname2);
-    delete_node(head1,(*my_node)->name,10);
 }
 int main()
 {
+    node *head,*head2,*n1,*n2;
+    head=create_node(head,1,0,100,"Amirparsa");
+    int arr[2][2]={2,1,3,4};
+    printf("%d\n",movecell(head,"North",head,head,2,arr));
+    print_list(head);
     return 0;
 }
