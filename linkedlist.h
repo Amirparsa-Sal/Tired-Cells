@@ -19,8 +19,10 @@ node* create_node(node *new_node,int x,int y,int energy,char *name){
     new_node->energy=energy;
     new_node->next=NULL;
     new_node->prev=NULL;
-    for(i=0;name[i]!='\0';i++)
+    for(i=0;name[i]!='\0' && i<10;i++)
         (new_node->name)[i]=name[i];
+    for(;i<10;i++)
+        (new_node->name)[i]='\0';
     return new_node;
 }
 void add_end(node *head,node *new_node){
@@ -60,9 +62,7 @@ void delete_node(node **head,char *name,int len){
             (*head)->next->prev=NULL;
             (*head)=(*head)->next;
             free((*head)->prev);
-
         }
-
         do{
             tmp2=tmp2->next;
             if(str_cmp(tmp2->name,nametmp,10)){
