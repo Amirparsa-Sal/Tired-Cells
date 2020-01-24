@@ -1,4 +1,4 @@
-int make_map(char *name,int map_size,char arr[map_size][map_size]){
+int make_map(char *name,int map_size,char **arr){
     int i,j;
     FILE *file;
     file=fopen(name,"wb");

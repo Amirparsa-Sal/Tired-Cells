@@ -1,4 +1,4 @@
-int CheckisAvailable(int x,int y,int n,node *head1,node *head2,int arr[n][n]){
+int CheckisAvailable(int x,int y,int n,node *head1,node *head2,int **arr){
     int arrx,arry;
     arrx=x;
     arry=n-1-y;
@@ -20,7 +20,7 @@ int CheckisAvailable(int x,int y,int n,node *head1,node *head2,int arr[n][n]){
     }while(head2->next!=NULL);
     return 1;
 }
-int get_energy(node *my_node,int n,int arr[n][n]){
+int get_energy(node *my_node,int n,int **arr){
     int x,y;
     int tmp;
     y=n-1-(my_node->pos).y;
@@ -32,7 +32,7 @@ int get_energy(node *my_node,int n,int arr[n][n]){
     my_node->energy+=find_min(15,(tmp)/4,100-my_node->energy);
     return 1;
 }
-int check_random_move(node *my_node,int arrx[6],int arry[6],int n,node *head1,node *head2,int arr[n][n],int *dx,int *dy){
+int check_random_move(node *my_node,int arrx[6],int arry[6],int n,node *head1,node *head2,int **arr,int *dx,int *dy){
     int valid=0,i,valids[6]={0},rnd;
     for(i=0;i<6;i++){
         if(CheckisAvailable((my_node->pos).x+arrx[i],(my_node->pos).y+arry[i],n,head1,head2,arr)){
@@ -47,7 +47,7 @@ int check_random_move(node *my_node,int arrx[6],int arry[6],int n,node *head1,no
     (*dy)=arry[valids[rnd]];
     return 1;
 }
-int mitosis(node **my_node,node **head1,node **head2,node **newcell1,char *newcellname1,node **newcell2,char *newcellname2,int n,int arr[n][n]){
+int mitosis(node **my_node,node **head1,node **head2,node **newcell1,char *newcellname1,node **newcell2,char *newcellname2,int n,int **arr){
     int x,y,arrx,arry,dx,dy;
     int zojdirectionx[6]={-1,-1,0,0,1,1},zojdirectiony[6]={0,1,-1,1,0,1},farddirectionx[6]={-1,-1,0,0,1,1},farddirectiony[6]={0,-1,-1,1,0,-1};
     x=((*my_node)->pos).x;
@@ -72,7 +72,7 @@ int mitosis(node **my_node,node **head1,node **head2,node **newcell1,char *newce
     delete_node(head1,(*my_node)->name,10);
     return 1;
 }
-int movecell(node *my_node,char *direction,node* head1,node *head2,int n,int arr[n][n]){
+int movecell(node *my_node,char *direction,node* head1,node *head2,int n,int **arr){
     int x,y;
     x=(my_node->pos).x;
     y=(my_node->pos).y;
