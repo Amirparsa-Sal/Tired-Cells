@@ -7,12 +7,13 @@
 #include "file.h"
 #include "cells.h"
 int main(){
-    int i,n,j;
-    char *MapAddress,**arr;
-    node *HeadPlayer1,*HeadPlayer2;
-    int NumofPlayers,turn,mode,NumofEnergy=0;
+    node *HeadPlayer1=NULL,*HeadPlayer2=NULL;
     int **energy;
-    printf("What do you like to do?\n 1)Load a game\n 2)Make new single player game\n 3)Make new multiplayer game\n 4)Exit\n");
+    char **arr;
+    int NumofPlayers=1,turn=1,mode,NumofEnergy=0,l1,l2;
+    int i,n,j;
+    char *MapAddress,*player1,*player2;
+    printf("What do you like to do?\n 1)Load a game\n 2)Make a new single player game\n 3)Make a new multiplayer game\n 4)Exit\n");
     scanf("%d",&mode);
     //initialize
     if(mode==1){
@@ -24,18 +25,39 @@ int main(){
         scanf("%d",&AddressNumber);
         AddressNumber--;
         //Needs to be checked before loading
-        load_game(&HeadPlayer1,&HeadPlayer2,&NumofPlayers,&turn,&MapAddress,SavedAdresses[AddressNumber],&energy,&NumofEnergy);
+        load_game(&HeadPlayer1,&HeadPlayer2,&NumofPlayers,&player1,&player2,&turn,&MapAddress,SavedAdresses[AddressNumber],&energy,&NumofEnergy);
         n=read_map(MapAddress,&arr);
     }
-    /*if(mode==2){
-        //some inits head1,head2,nop=1,turn=1,mapaddress,n,arr
-    }
-    if(mode==3){
-        //some inits head1,head2,nop=1,turn=1,mapaddress,n,arr
-    }*/
-    if(mode==2 || mode==3){
-        //init energy
-        int i,j;
+    else{
+        //init map
+        char **SavedMaps;
+        char *cellname;
+        node *tmp;
+        int MapsSize,MapNumber,x,y;
+        printf("Please choose on of the following maps:\n");
+        read_dir(&SavedMaps,".bin",4,&MapsSize);
+        printaddress(SavedMaps,MapsSize,4);
+        scanf("%d",&MapNumber);
+        MapNumber--;
+        n=read_map(SavedMaps[MapNumber],&arr);
+        MapAddress=SavedMaps[MapNumber];
+        //init heads
+        printf("Please enter the name of Player1: ");
+        fflush(stdin);
+        getstring(&player1);
+        //must check for available
+        printf("%s, Please enter the number of cells you want: ",player1);
+        scanf("%d",&l1);
+        get_cells(n,&HeadPlayer1,&HeadPlayer2,player1,l1,arr);
+        if(mode==3){
+            NumofPlayers=2;
+            printf("Please enter the name of Player2: ");
+            fflush(stdin);
+            getstring(&player2);
+            printf("%s, Please enter the number of cells you want: ",player2);
+            scanf("%d",&l2);
+            get_cells(n,&HeadPlayer2,&HeadPlayer1,player2,l2,arr);
+        }
         for(i=0;i<n;i++){
             for(j=0;j<n;j++){
                 if(arr[i][j]=='1'){
@@ -49,12 +71,8 @@ int main(){
                     energy[NumofEnergy][2]=100;
                     NumofEnergy++;
                 }
-
             }
         }
-    }
-    print_list(HeadPlayer1);
-    for(i=0;i<NumofEnergy;i++){
-        printf("%d %d %d\n",energy[i][0],energy[i][1],energy[i][2]);
+
     }
 }

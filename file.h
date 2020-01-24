@@ -52,7 +52,7 @@ int read_map(char *name,char ***arr){
     fclose(file);
     return n;
 }
-int save_game(node *head1,node *head2,int NumOfPlayers,int turn,char *map_address,char *save_address,int **energy,int NumofEnergy){
+int save_game(node *head1,node *head2,int NumOfPlayers,char *Player1Name,char *Player2Name,int turn,char *map_address,char *save_address,int **energy,int NumofEnergy){
     int len,i;
     int l1,l2=0;
     FILE *file;
@@ -66,6 +66,18 @@ int save_game(node *head1,node *head2,int NumOfPlayers,int turn,char *map_addres
             break;
     for(i=0;i<len;i++){
         fwrite(&(map_address[i]),sizeof(char),1,file);
+    }
+    for(len=1;;len++)
+        if(Player1Name[len-1]=='\0')
+            break;
+    for(i=0;i<len;i++){
+        fwrite(&(Player1Name[i]),sizeof(char),1,file);
+    }
+    for(len=1;;len++)
+        if(Player2Name[len-1]=='\0')
+            break;
+    for(i=0;i<len;i++){
+        fwrite(&(Player2Name[i]),sizeof(char),1,file);
     }
     l1=list_size(head1);
     if(NumOfPlayers==2)
@@ -83,7 +95,7 @@ int save_game(node *head1,node *head2,int NumOfPlayers,int turn,char *map_addres
             fwrite(head2,sizeof(node),1,file);
             head2=head2->next;
         }
-        fwrite(head1,sizeof(node),1,file);
+        fwrite(head2,sizeof(node),1,file);
     }
     fwrite(&turn,sizeof(int),1,file);
     fwrite(&NumofEnergy,sizeof(int),1,file);
@@ -95,7 +107,7 @@ int save_game(node *head1,node *head2,int NumOfPlayers,int turn,char *map_addres
     fclose(file);
     return 0;
 }
-int load_game(node **head1,node **head2,int *NumOfPlayers,int *turn,char **map_address,char *save_address,int ***energy,int *NumofEnergy){
+int load_game(node **head1,node **head2,int *NumOfPlayers,char **Player1Name,char ** Player2Name,int *turn,char **map_address,char *save_address,int ***energy,int *NumofEnergy){
     FILE *file;
     int cnt=0,l1,l2;
     char c;
@@ -114,6 +126,27 @@ int load_game(node **head1,node **head2,int *NumOfPlayers,int *turn,char **map_a
         fread(&c,sizeof(char),1,file);
     }
     (*map_address)[cnt]='\0';
+    cnt=0;
+    (*Player1Name)=(char *)malloc(sizeof(char));
+    fread(&c,sizeof(char),1,file);
+    while(c!='\0'){
+        (*Player1Name)[cnt]=c;
+        cnt++;
+        (*Player1Name)=(char *)realloc((*Player1Name),(cnt+1)*sizeof(char));
+        fread(&c,sizeof(char),1,file);
+    }
+    (*Player1Name)[cnt]='\0';
+    cnt=0;
+    (*Player2Name)=(char *)malloc(sizeof(char));
+    fread(&c,sizeof(char),1,file);
+    while(c!='\0'){
+        (*Player2Name)[cnt]=c;
+        cnt++;
+        (*Player2Name)=(char *)realloc((*Player2Name),(cnt+1)*sizeof(char));
+        fread(&c,sizeof(char),1,file);
+    }
+    (*Player2Name)[cnt]='\0';
+
     fread(NumOfPlayers,sizeof(int),1,file);
     fread(&l1,sizeof(int),1,file);
     fread(&l2,sizeof(int),1,file);

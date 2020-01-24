@@ -34,17 +34,22 @@ void add_end(node *head,node *new_node){
     new_node->prev=head;
 }
 void print_list(node *head){
+    if(head==NULL)
+        return;
     int i=1;
     for(;head->next!=NULL;head=head->next,i++)
-        printf("%d)%s (%d,%d)\n",i,head->name,(head->pos).x,(head->pos).y);
-    printf("%d)%s (%d,%d)",i,head->name,(head->pos).x,(head->pos).y);
-    printf("\n-------------\n");
+        printf("%d)%s Pos=(%d,%d) Energy:%d\n",i,head->name,(head->pos).x,(head->pos).y,head->energy);
+    printf("%d)%s Pos=(%d,%d) Energy:%d\n",i,head->name,(head->pos).x,(head->pos).y,head->energy);
+    printf("-------------\n");
 }
 int list_size(node *head){
+    if(head==NULL)
+        return 0;
     int len=0;
     for(;head->next!=NULL;head=head->next)
         len++;
     len++;
+
     return len;
 }
 void delete_node(node **head,char *name,int len){

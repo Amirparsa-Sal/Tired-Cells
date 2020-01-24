@@ -6,18 +6,25 @@ int CheckisAvailable(int x,int y,int n,node *head1,node *head2,char **arr){
         return 0;
     if(arr[arry][arrx]=='3')
         return 0;
-    do{
-        if((head1->pos).x==x && (head1->pos).y==y)
-            return 0;
-        if(head1->next!=NULL)
-            head1=head1->next;
-    }while(head1->next!=NULL);
-    do{
-        if((head2->pos).x==x && (head2->pos).y==y)
-            return 0;
-        if(head2->next!=NULL)
-            head2=head2->next;
-    }while(head2->next!=NULL);
+
+    if(list_size(head1)!=0){
+
+        do{
+            if((head1->pos).x==x && (head1->pos).y==y)
+                return 0;
+            if(head1->next!=NULL)
+                head1=head1->next;
+
+        }while(head1->next!=NULL);
+    }
+    if(list_size(head2)!=0){
+        do{
+            if((head2->pos).x==x && (head2->pos).y==y)
+                return 0;
+            if(head2->next!=NULL)
+                head2=head2->next;
+        }while(head2->next!=NULL);
+    }
     return 1;
 }
 int find_energy(int x,int y,int **energy,int NumofEnergy){
@@ -82,7 +89,6 @@ int mitosis(node **my_node,node **head1,node **head2,node **newcell1,char *newce
     (*newcell2)=create_node((*newcell2),x+dx,y+dy,40,newcellname2);
     add_end(*head1,*newcell1);
     add_end(*head1,*newcell2);
-    printf(".");
     delete_node(head1,(*my_node)->name,10);
     return 1;
 }
@@ -160,3 +166,34 @@ int movecell(node *my_node,char *direction,node* head1,node *head2,int n,char **
     }
     return 1;
 }
+void get_cells(int n,node **HeadPlayer1,node **HeadPlayer2,char *player1,int len,char **arr){
+    int x,y,i;
+    node *tmp;
+    x=rand()%n;
+    y=rand()%n;
+    (*HeadPlayer1)=create_node((*HeadPlayer1),-1,-1,100,"");
+    while(!CheckisAvailable(x,y,n,*HeadPlayer1,*HeadPlayer2,arr)){
+        x=rand()%n;
+        y=rand()%n;
+    }
+
+    (*HeadPlayer1)=create_node((*HeadPlayer1),x,y,100,"");
+    fflush(stdin);
+    printf("%s, Please enter the name of cell%d: ",player1,1);
+    getcellname((*HeadPlayer1)->name);
+    printf("%s added\n",(*HeadPlayer1)->name);
+    tmp=(*HeadPlayer1);
+    for(i=1;i<len;i++){
+        printf("%s, Please enter the name of cell%d: ",player1,i+1);
+        x=rand()%n;
+        y=rand()%n;
+        while(!CheckisAvailable(x,y,n,*HeadPlayer1,*HeadPlayer2,arr)){
+            x=rand()%n;
+            y=rand()%n;
+        }
+        tmp->next=create_node(tmp->next,x,y,100,"");
+        fflush(stdin);
+        getcellname(tmp->next->name);
+    }
+}
+

@@ -11,6 +11,16 @@ void getstring(char **name){
     }
     (*name)[len]='\0';
 }
+void getcellname(char name[10]){
+    int index=0;
+    char c;
+    c=getchar();
+    while(c!='\n' && index<10){
+        name[index]=c;
+        c=getchar();
+        index++;
+    }
+}
 int str_cmp(char *src,char *dst,int len){
     int i;
     for(i=0;i<len;i++)
