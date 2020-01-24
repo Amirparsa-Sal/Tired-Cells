@@ -1,6 +1,5 @@
 int make_map(char *name,int map_size,char **arr){
-    int i,j,x;
-    char c;
+    int i,j;
     FILE *file;
     file=fopen(name,"wb");
     if(file==NULL){
@@ -17,6 +16,7 @@ int make_map(char *name,int map_size,char **arr){
 int random_map(char *name,int map_size){
     srand(time(NULL));
     int i,j,x;
+    char c;
     FILE *file;
     file=fopen(name,"wb");
     if(file==NULL){
@@ -27,7 +27,8 @@ int random_map(char *name,int map_size){
     for(i=0;i<map_size;i++){
         for(j=0;j<map_size;j++){
             x=rand()%4 +1;
-            fwrite(&x,sizeof(char),1,file);
+            c='0'+x;
+            fwrite(&c,sizeof(char),1,file);
         }
     }
     fclose(file);

@@ -39,7 +39,7 @@ int find_min(int a,int b,int c){
 }
 int strlength(char *str){
     int len=1;
-    for(;str[len-1]!=NULL;len++);
+    for(;str[len-1]!='\0';len++);
     return len;
 }
 void printaddress(char **arr,int arrlen,int suffixlen){

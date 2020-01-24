@@ -176,7 +176,6 @@ void get_cells(int n,node **HeadPlayer1,node **HeadPlayer2,char *player1,int len
         x=rand()%n;
         y=rand()%n;
     }
-
     (*HeadPlayer1)=create_node((*HeadPlayer1),x,y,100,"");
     fflush(stdin);
     printf("%s, Please enter the name of cell%d: ",player1,1);
@@ -194,6 +193,8 @@ void get_cells(int n,node **HeadPlayer1,node **HeadPlayer2,char *player1,int len
         tmp->next=create_node(tmp->next,x,y,100,"");
         fflush(stdin);
         getcellname(tmp->next->name);
+        tmp=tmp->next;
+        printf("%s added\n",tmp->name);
     }
 }
 
