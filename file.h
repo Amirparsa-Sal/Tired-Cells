@@ -13,7 +13,6 @@ int make_map(char *name,int map_size,char **arr){
     fclose(file);
     return 0;
 }
-
 int random_map(char *name,int map_size){
     srand(time(NULL));
     int i,j,x;
@@ -33,7 +32,6 @@ int random_map(char *name,int map_size){
     fclose(file);
     return 0;
 }
-
 int read_map(char *name,char ***arr){
     int i,j;
     int n;
@@ -76,9 +74,18 @@ int save_game(node *head1,node *head2,int NumOfPlayers,int turn,char *map_addres
     fwrite(&NumOfPlayers,sizeof(int),1,file);
     fwrite(&l1,sizeof(int),1,file);
     fwrite(&l2,sizeof(int),1,file);
+    while(head1->next!=NULL){
+        fwrite(head1,sizeof(node),1,file);
+        head1=head1->next;
+    }
     fwrite(head1,sizeof(node),1,file);
-    if(NumOfPlayers==2)
-        fwrite(head2,sizeof(node),1,file);
+    if(NumOfPlayers==2){
+        while(head2->next!=NULL){
+            fwrite(head2,sizeof(node),1,file);
+            head2=head2->next;
+        }
+        fwrite(head1,sizeof(node),1,file);
+    }
     fwrite(&turn,sizeof(int),1,file);
     fclose(file);
     return 0;
@@ -95,7 +102,6 @@ int load_game(node **head1,node **head2,int *NumOfPlayers,int *turn,char **map_a
     }
     (*map_address)=(char *)malloc(sizeof(char));
     fread(&c,sizeof(char),1,file);
-
     while(c!='\0'){
         (*map_address)[cnt]=c;
         cnt++;
@@ -103,17 +109,26 @@ int load_game(node **head1,node **head2,int *NumOfPlayers,int *turn,char **map_a
         fread(&c,sizeof(char),1,file);
     }
     (*map_address)[cnt]='\0';
-
     fread(NumOfPlayers,sizeof(int),1,file);
     fread(&l1,sizeof(int),1,file);
     fread(&l2,sizeof(int),1,file);
-
-    tmp=create_node(tmp,0,0,0,"tmp");
     (*head1)=create_node(*head1,0,0,0,"tmp");
     fread(*head1,sizeof(node),1,file);
+    tmp=*head1;
+    for(;l1-1>0;l1--){
+        tmp->next=create_node(tmp->next,0,0,100,"tmp");
+        fread(tmp->next,sizeof(node),1,file);
+        tmp=tmp->next;
+    }
     if(l2!=0){
         (*head2)=create_node(*head2,0,0,0,"tmp");
         fread(*head2,sizeof(node),1,file);
+        tmp=*head2;
+        for(;l2-1>0;l2--){
+            tmp->next=create_node(tmp->next,0,0,100,"tmp");
+            fread(tmp->next,sizeof(node),1,file);
+            tmp=tmp->next;
+        }
     }
     fread(turn,sizeof(int),1,file);
     fclose(file);

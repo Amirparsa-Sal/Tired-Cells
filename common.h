@@ -19,10 +19,27 @@ int str_cmp(char *src,char *dst,int len){
     return 1;
 }
 int find_min(int a,int b,int c){
+
     int mn=a;
     if(b<mn)
         mn=b;
     if(c<mn)
         mn=c;
     return mn;
+}
+int strlength(char *str){
+    int len=1;
+    for(;str[len-1]!=NULL;len++);
+    return len;
+}
+void printaddress(char **arr,int arrlen,int suffixlen){
+    int i,j;
+    printf("+------------------------+\n");
+    for(i=0;i<arrlen;i++){
+        printf("%d) ",i+1);
+        for(j=0;j<strlength(arr[i])-suffixlen-1;j++)
+            printf("%c",arr[i][j]);
+        printf("\n");
+    }
+    printf("+------------------------+\n");
 }

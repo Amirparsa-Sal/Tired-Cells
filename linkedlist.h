@@ -26,7 +26,10 @@ node* create_node(node *new_node,int x,int y,int energy,char *name){
     return new_node;
 }
 void add_end(node *head,node *new_node){
-    for(;head->next!=NULL;head=head->next);
+    printf("*");
+    while(head->next!=NULL)
+        head=head->next;
+
     head->next=new_node;
     new_node->prev=head;
 }
@@ -35,6 +38,7 @@ void print_list(node *head){
     for(;head->next!=NULL;head=head->next,i++)
         printf("%d)%s (%d,%d)\n",i,head->name,(head->pos).x,(head->pos).y);
     printf("%d)%s (%d,%d)",i,head->name,(head->pos).x,(head->pos).y);
+    printf("\n-------------");
 }
 int list_size(node *head){
     int len=0;
