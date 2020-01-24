@@ -38,7 +38,7 @@ void print_list(node *head){
     for(;head->next!=NULL;head=head->next,i++)
         printf("%d)%s (%d,%d)\n",i,head->name,(head->pos).x,(head->pos).y);
     printf("%d)%s (%d,%d)",i,head->name,(head->pos).x,(head->pos).y);
-    printf("\n-------------");
+    printf("\n-------------\n");
 }
 int list_size(node *head){
     int len=0;

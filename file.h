@@ -1,5 +1,6 @@
 int make_map(char *name,int map_size,char **arr){
-    int i,j;
+    int i,j,x;
+    char c;
     FILE *file;
     file=fopen(name,"wb");
     if(file==NULL){
@@ -45,14 +46,13 @@ int read_map(char *name,char ***arr){
     (*arr)=(char **)malloc(n*sizeof(char *));
     for(i=0;i<n;i++)
         (*arr)[i]=(char *)malloc(n*sizeof(char));
-    for(i=0;i<n;i++){
+    for(i=0;i<n;i++)
         for(j=0;j<n;j++)
            fread(&((*arr)[i][j]),sizeof(char),1,file);
-    }
     fclose(file);
     return n;
 }
-int save_game(node *head1,node *head2,int NumOfPlayers,int turn,char *map_address,char *save_address){
+int save_game(node *head1,node *head2,int NumOfPlayers,int turn,char *map_address,char *save_address,int **energy,int NumofEnergy){
     int len,i;
     int l1,l2=0;
     FILE *file;
@@ -65,7 +65,6 @@ int save_game(node *head1,node *head2,int NumOfPlayers,int turn,char *map_addres
         if(map_address[len-1]=='\0')
             break;
     for(i=0;i<len;i++){
-        printf("%c",map_address[i]);
         fwrite(&(map_address[i]),sizeof(char),1,file);
     }
     l1=list_size(head1);
@@ -87,10 +86,16 @@ int save_game(node *head1,node *head2,int NumOfPlayers,int turn,char *map_addres
         fwrite(head1,sizeof(node),1,file);
     }
     fwrite(&turn,sizeof(int),1,file);
+    fwrite(&NumofEnergy,sizeof(int),1,file);
+    for(i=0;i<NumofEnergy;i++){
+        fwrite(&energy[i][0],sizeof(int),1,file);
+        fwrite(&energy[i][1],sizeof(int),1,file);
+        fwrite(&energy[i][2],sizeof(int),1,file);
+    }
     fclose(file);
     return 0;
 }
-int load_game(node **head1,node **head2,int *NumOfPlayers,int *turn,char **map_address,char *save_address){
+int load_game(node **head1,node **head2,int *NumOfPlayers,int *turn,char **map_address,char *save_address,int ***energy,int *NumofEnergy){
     FILE *file;
     int cnt=0,l1,l2;
     char c;
@@ -131,6 +136,15 @@ int load_game(node **head1,node **head2,int *NumOfPlayers,int *turn,char **map_a
         }
     }
     fread(turn,sizeof(int),1,file);
+    fread(NumofEnergy,sizeof(int),1,file);
+    int i;
+    (*energy)=(int **)malloc(*NumofEnergy*sizeof(int *));
+    for(i=0;i<*NumofEnergy;i++){
+        (*energy)[i]=(int *)malloc(3*sizeof(int));
+        fread(&((*energy)[i][0]),sizeof(int),1,file);
+        fread(&((*energy)[i][1]),sizeof(int),1,file);
+        fread(&((*energy)[i][2]),sizeof(int),1,file);
+    }
     fclose(file);
     return 0;
 }

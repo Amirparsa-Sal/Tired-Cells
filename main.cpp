@@ -7,11 +7,14 @@
 #include "file.h"
 #include "cells.h"
 int main(){
-    char *MapAddress;
+    int i,n,j;
+    char *MapAddress,**arr;
     node *HeadPlayer1,*HeadPlayer2;
-    int NumofPlayers,turn,**arr,mode;
+    int NumofPlayers,turn,mode,NumofEnergy=0;
+    int **energy;
     printf("What do you like to do?\n 1)Load a game\n 2)Make new single player game\n 3)Make new multiplayer game\n 4)Exit\n");
     scanf("%d",&mode);
+    //initialize
     if(mode==1){
         char **SavedAdresses;
         int AddressesSize,AddressNumber;
@@ -21,8 +24,37 @@ int main(){
         scanf("%d",&AddressNumber);
         AddressNumber--;
         //Needs to be checked before loading
-        load_game(&HeadPlayer1,&HeadPlayer2,&NumofPlayers,&turn,&MapAddress,SavedAdresses[AddressNumber]);
+        load_game(&HeadPlayer1,&HeadPlayer2,&NumofPlayers,&turn,&MapAddress,SavedAdresses[AddressNumber],&energy,&NumofEnergy);
+        n=read_map(MapAddress,&arr);
+    }
+    /*if(mode==2){
+        //some inits head1,head2,nop=1,turn=1,mapaddress,n,arr
+    }
+    if(mode==3){
+        //some inits head1,head2,nop=1,turn=1,mapaddress,n,arr
+    }*/
+    if(mode==2 || mode==3){
+        //init energy
+        int i,j;
+        for(i=0;i<n;i++){
+            for(j=0;j<n;j++){
+                if(arr[i][j]=='1'){
+                    if(NumofEnergy==0)
+                        energy=(int **)malloc(sizeof(int *));
+                    else
+                        energy=(int **)realloc(energy,(NumofEnergy+1)*sizeof(int *));
+                    energy[NumofEnergy]=(int *)malloc(3*sizeof(int));
+                    energy[NumofEnergy][0]=i;
+                    energy[NumofEnergy][1]=j;
+                    energy[NumofEnergy][2]=100;
+                    NumofEnergy++;
+                }
+
+            }
+        }
     }
     print_list(HeadPlayer1);
-	return 0;
+    for(i=0;i<NumofEnergy;i++){
+        printf("%d %d %d\n",energy[i][0],energy[i][1],energy[i][2]);
+    }
 }
