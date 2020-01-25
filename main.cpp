@@ -15,7 +15,7 @@ int main(){
     int NumofPlayers=1,turn=1,mode,NumofEnergy=0,l1,l2;
     int i,n,j;
     char *MapAddress,*player1,*player2;
-    printf("What do you like to do?\n 1)Load a game\n 2)Make a new single player game\n 3)Make a new multiplayer game\n 4)Exit\n");
+    printf("What do you like to do? \n1)Load a game \n2)Make a new single player game \n3)Make a new multiplayer game \n4)Exit\n");
     scanf("%d",&mode);
     system("cls");
     //initialize
@@ -83,11 +83,59 @@ int main(){
             }
         }
     }
-    print_list(HeadPlayer1);
-    print_list(HeadPlayer2);
+    system("cls");
+    int flag=1;
     initwindow(800,800);
     update_map(arr,n,energy,NumofEnergy,HeadPlayer1,HeadPlayer2,NumofPlayers);
-    fflush(stdin);
-    getchar();
+    //fflush(stdin);
+    while(flag){
+        if(turn%2==1){
+            int i,mode;
+            node *my_node=HeadPlayer1;
+            int cellnumber=list_size(HeadPlayer1)+1;
+            print_list(HeadPlayer1);
+            while(cellnumber>list_size(HeadPlayer1) || cellnumber<=0){
+                printf("%s, Please choose one of your cells\nCell number: ",player1);
+                scanf("%d",&cellnumber);
+                if(cellnumber>list_size(HeadPlayer1) || cellnumber<=0)
+                    printf("Invalid Number Please Try Again\n");
+            }
+            for(i=0;i<cellnumber-1;i++)
+                my_node=my_node->next;
+            system("cls");
+            printf("%s, What do you like to do with your cell? (Cell Name= %s)\n",player1,my_node->name);
+            printf("1)Move \n2)Split Cell \n3)Boost Energy \n4)Save \n5)Exit\n");
+            scanf("%d",&mode);
+            system("cls");
+            if(mode==1){
+                char *direction;
+                int dir,flag=0;
+                while(!flag){
+                    printf("Please enter the direction you want:\n");
+                    printf("1)North \n2)South \n3)NorthEast \n4)NorthWest \n5)SouthEast \n6)SouthWest\n");
+                    scanf("%d",&dir);
+                    if(dir==1) direction="North";
+                    else if(dir==2) direction="South";
+                    else if(dir==3) direction="NorthEast";
+                    else if(dir==4) direction="NorthWest";
+                    else if(dir==5) direction="SouthEast";
+                    else if(dir==6) direction="SouthWest";
+                    flag=movecell(my_node,direction,HeadPlayer1,HeadPlayer2,n,arr);
+                    if(flag==1){
+                        printf("Your cell moved successfuly!");
+                        update_map(arr,n,energy,NumofEnergy,HeadPlayer1,HeadPlayer2,NumofPlayers);
+                        if(NumofPlayers==2)turn++;
+                    }
+                    else{
+                      printf("Cannot move to that place!");
+                    }
+                    Sleep(500);
+                    system("cls");
+                }
+
+            }
+        }
+
+    }
     return 0;
-}
+};

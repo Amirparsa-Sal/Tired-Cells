@@ -43,8 +43,9 @@ int get_energy(node *my_node,int n,char **arr,int **energy,int NumofEnergy){
     y=n-1-(my_node->pos).y;
     x=(my_node->pos).x;
     if(arr[y][x]!='1')
-        return 0;
-
+        return -1;
+    if (my_node->energy==100)
+        return -2;
     tmp=energy[find_energy(y,x,energy,NumofEnergy)][2];
     printf("tmp:%d\n",tmp);
     energy[find_energy(y,x,energy,NumofEnergy)][2]-=find_min(15,energy[find_energy(y,x,energy,NumofEnergy)][2],100-my_node->energy);
@@ -52,7 +53,6 @@ int get_energy(node *my_node,int n,char **arr,int **energy,int NumofEnergy){
     my_node->energy+=find_min(15,tmp,100-my_node->energy);
     return 1;
 }
-
 int check_random_move(node *my_node,int arrx[6],int arry[6],int n,node *head1,node *head2,char **arr,int *dx,int *dy){
     int valid=0,i,valids[6]={0},rnd;
     for(i=0;i<6;i++){
@@ -75,15 +75,17 @@ int mitosis(node **my_node,node **head1,node **head2,node **newcell1,char *newce
     y=((*my_node)->pos).y;
     arrx=x;
     arry=n-1-y;
-    if((*my_node)->energy<80 || arr[arry][arrx]!='2')
-        return 0;
+    if((*my_node)->energy<80)
+        return -1;
+    if(arr[arry][arrx]!='2')
+        return -2;
     if(x%2==0){
         if (!check_random_move(*my_node,zojdirectionx,zojdirectiony,n,*head1,*head2,arr,&dx,&dy))
-            return 0;
+            return -3;
     }
     else if(x%2==1){
         if (!check_random_move(*my_node,farddirectionx,farddirectiony,n,*head1,*head2,arr,&dx,&dy))
-            return 0;
+            return -3;
     }
     (*newcell1)=create_node((*newcell1),x,y,40,newcellname1);
     (*newcell2)=create_node((*newcell2),x+dx,y+dy,40,newcellname2);
@@ -172,6 +174,7 @@ void get_cells(int n,node **HeadPlayer1,node **HeadPlayer2,char *player1,int len
     x=rand()%n;
     y=rand()%n;
     (*HeadPlayer1)=create_node((*HeadPlayer1),-1,-1,100,"");
+    //needs to be better
     while(!CheckisAvailable(x,y,n,*HeadPlayer1,*HeadPlayer2,arr)){
         x=rand()%n;
         y=rand()%n;
@@ -197,4 +200,3 @@ void get_cells(int n,node **HeadPlayer1,node **HeadPlayer2,char *player1,int len
         printf("%s added\n",tmp->name);
     }
 }
-
