@@ -101,7 +101,10 @@ void PlayTheTurn(node **HeadPlayer,node **HeadOtherPlayer,char *player,char *Oth
         save_address[len+1]='a';
         save_address[len+2]='t';
         save_address[len+3]='\0';
-        save_game(*HeadPlayer,*HeadOtherPlayer,NumofPlayers,player,OtherPlayer,*turn,MapAddress,save_address,energy,NumofEnergy);
+        if(realplayer1==1)
+            save_game(*HeadPlayer,*HeadOtherPlayer,NumofPlayers,player,OtherPlayer,*turn,MapAddress,save_address,energy,NumofEnergy);
+        else
+            save_game(*HeadOtherPlayer,*HeadPlayer,NumofPlayers,OtherPlayer,player,*turn,MapAddress,save_address,energy,NumofEnergy);
         printf("Your game has been saved!");
         Sleep(1000);
         system("cls");
