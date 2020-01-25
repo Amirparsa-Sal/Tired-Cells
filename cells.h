@@ -47,6 +47,8 @@ int get_energy(node *my_node,int n,char **arr,int **energy,int NumofEnergy){
     if (my_node->energy==100)
         return -2;
     tmp=energy[find_energy(y,x,energy,NumofEnergy)][2];
+    if(tmp==0)
+        return -3;
     printf("tmp:%d\n",tmp);
     energy[find_energy(y,x,energy,NumofEnergy)][2]-=find_min(15,energy[find_energy(y,x,energy,NumofEnergy)][2],100-my_node->energy);
     printf("final:%d\n",energy[find_energy(y,x,energy,NumofEnergy)][2]);

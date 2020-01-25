@@ -156,6 +156,20 @@ int main(){
                 }
 
             }
+            else if(mode==3){
+                int flag;
+                flag=get_energy(my_node,n,arr,energy,NumofEnergy);
+                if(flag==-1)printf("Getting energy failed because the cell is not on the energy resource place\n\n");
+                else if(flag==-2)printf("Getting energy failed because the cell is full of energy\n\n");
+                else if(flag==-3)printf("Getting energy failed because the energy resource is empty\n\n");
+                else{
+                    printf("Your cell got energy successfuly!\n");
+                    update_map(arr,n,energy,NumofEnergy,HeadPlayer1,HeadPlayer2,NumofPlayers);
+                    if(NumofPlayers==2)turn++;
+                    Sleep(500);
+                    system("cls");
+                }
+            }
         }
 
     }
