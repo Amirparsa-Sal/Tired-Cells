@@ -8,22 +8,22 @@ int CheckisAvailable(int x,int y,int n,node *head1,node *head2,char **arr){
         return 0;
 
     if(list_size(head1)!=0){
-
-        do{
+        while(head1->next!=NULL){
             if((head1->pos).x==x && (head1->pos).y==y)
                 return 0;
-            if(head1->next!=NULL)
-                head1=head1->next;
-
-        }while(head1->next!=NULL);
+            head1=head1->next;
+        }
+        if((head1->pos).x==x && (head1->pos).y==y)
+                return 0;
     }
     if(list_size(head2)!=0){
-        do{
+        while(head2->next!=NULL){
             if((head2->pos).x==x && (head2->pos).y==y)
                 return 0;
-            if(head2->next!=NULL)
-                head2=head2->next;
-        }while(head2->next!=NULL);
+            head2=head2->next;
+        }
+        if((head2->pos).x==x && (head2->pos).y==y)
+                return 0;
     }
     return 1;
 }
@@ -77,10 +77,10 @@ int check_for_split(node **my_node,node **head1,node **head2,int n,char **arr,in
     y=((*my_node)->pos).y;
     arrx=x;
     arry=n-1-y;
-    if((*my_node)->energy<80)
-        return -1;
     if(arr[arry][arrx]!='2')
         return -2;
+    if((*my_node)->energy<80)
+        return -1;
     if(x%2==0){
         if (!check_random_move(*my_node,zojdirectionx,zojdirectiony,n,*head1,*head2,arr,dx,dy))
             return -3;

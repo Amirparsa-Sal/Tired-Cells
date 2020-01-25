@@ -31,7 +31,7 @@ void update_cells(node *HeadPlayer,int player,int ***pos,int n,int L){
     y2=pos[arry][arrx][3];
     fillellipse((x1+x2)/2,(y1+y2)/2,L/4,L/4);
 }
-void update_map(char **arr,int n,int **energy,int NumofEnergy,node *HeadPlayer1,node *HeadPlayer2,int NumofPlayers){
+void update_map(char **arr,int n,int **energy,int NumofEnergy,node *HeadPlayer1,node *HeadPlayer2,int NumofPlayers,int realplayer1){
     int i,j;
     int x,y,x1,y1,x2,y2,L;
     int ***pos;
@@ -81,7 +81,14 @@ void update_map(char **arr,int n,int **energy,int NumofEnergy,node *HeadPlayer1,
         bar(x1,y1,x1+(en/100.0)*L,y2);
         rectangle(x1,y1,x2,y2);
     }
-    update_cells(HeadPlayer1,1,pos,n,L);
-    if(NumofPlayers==2)
-        update_cells(HeadPlayer2,2,pos,n,L);
+    if(realplayer1==1)
+        update_cells(HeadPlayer1,1,pos,n,L);
+    else
+        update_cells(HeadPlayer2,1,pos,n,L);
+    if(NumofPlayers==2){
+        if(realplayer1==1)
+            update_cells(HeadPlayer2,2,pos,n,L);
+        else
+            update_cells(HeadPlayer1,2,pos,n,L);
+    }
 }
