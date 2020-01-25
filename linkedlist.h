@@ -26,7 +26,6 @@ node* create_node(node *new_node,int x,int y,int energy,char *name){
     return new_node;
 }
 void add_end(node *head,node *new_node){
-    printf("*");
     while(head->next!=NULL)
         head=head->next;
 
