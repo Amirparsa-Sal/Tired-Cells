@@ -68,8 +68,8 @@ int check_random_move(node *my_node,int arrx[6],int arry[6],int n,node *head1,no
     (*dy)=arry[valids[rnd]];
     return 1;
 }
-int mitosis(node **my_node,node **head1,node **head2,node **newcell1,char *newcellname1,node **newcell2,char *newcellname2,int n,char **arr){
-    int x,y,arrx,arry,dx,dy;
+int check_for_split(node **my_node,node **head1,node **head2,int n,char **arr,int *dx,int *dy){
+    int x,y,arrx,arry;
     int zojdirectionx[6]={-1,-1,0,0,1,1},zojdirectiony[6]={0,1,-1,1,0,1},farddirectionx[6]={-1,-1,0,0,1,1},farddirectiony[6]={0,-1,-1,1,0,-1};
     x=((*my_node)->pos).x;
     y=((*my_node)->pos).y;
@@ -80,18 +80,26 @@ int mitosis(node **my_node,node **head1,node **head2,node **newcell1,char *newce
     if(arr[arry][arrx]!='2')
         return -2;
     if(x%2==0){
-        if (!check_random_move(*my_node,zojdirectionx,zojdirectiony,n,*head1,*head2,arr,&dx,&dy))
+        if (!check_random_move(*my_node,zojdirectionx,zojdirectiony,n,*head1,*head2,arr,dx,dy))
             return -3;
     }
     else if(x%2==1){
-        if (!check_random_move(*my_node,farddirectionx,farddirectiony,n,*head1,*head2,arr,&dx,&dy))
+        if (!check_random_move(*my_node,farddirectionx,farddirectiony,n,*head1,*head2,arr,dx,dy))
             return -3;
     }
-    (*newcell1)=create_node((*newcell1),x,y,40,newcellname1);
-    (*newcell2)=create_node((*newcell2),x+dx,y+dy,40,newcellname2);
-    add_end(*head1,*newcell1);
-    add_end(*head1,*newcell2);
-    delete_node(head1,(*my_node)->name,10);
+    return 1;
+}
+int mitosis(node **my_node,node **head1,node **head2,node **newcell1,char *newcellname1,node **newcell2,char *newcellname2,int n,char **arr){
+    int x,y,dx,dy;
+    x=((*my_node)->pos).x;
+    y=((*my_node)->pos).y;
+    if(check_for_split(my_node,head1,head2,n,arr,&dx,&dy)){
+        (*newcell1)=create_node((*newcell1),x,y,40,newcellname1);
+        (*newcell2)=create_node((*newcell2),x+dx,y+dy,40,newcellname2);
+        add_end(*head1,*newcell1);
+        add_end(*head1,*newcell2);
+        delete_node(head1,(*my_node)->name,10);
+    }
     return 1;
 }
 int movecell(node *my_node,char *direction,node* head1,node *head2,int n,char **arr){

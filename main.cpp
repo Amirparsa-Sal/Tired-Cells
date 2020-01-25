@@ -110,25 +110,47 @@ int main(){
             if(mode==1){
                 char *direction;
                 int dir,flag=0;
-                while(!flag){
-                    printf("Please enter the direction you want:\n");
-                    printf("1)North \n2)South \n3)NorthEast \n4)NorthWest \n5)SouthEast \n6)SouthWest\n");
-                    scanf("%d",&dir);
-                    if(dir==1) direction="North";
-                    else if(dir==2) direction="South";
-                    else if(dir==3) direction="NorthEast";
-                    else if(dir==4) direction="NorthWest";
-                    else if(dir==5) direction="SouthEast";
-                    else if(dir==6) direction="SouthWest";
-                    flag=movecell(my_node,direction,HeadPlayer1,HeadPlayer2,n,arr);
-                    if(flag==1){
-                        printf("Your cell moved successfuly!");
-                        update_map(arr,n,energy,NumofEnergy,HeadPlayer1,HeadPlayer2,NumofPlayers);
-                        if(NumofPlayers==2)turn++;
-                    }
-                    else{
-                      printf("Cannot move to that place!");
-                    }
+                printf("Please enter the direction you want:\n");
+                printf("1)North \n2)South \n3)NorthEast \n4)NorthWest \n5)SouthEast \n6)SouthWest\n");
+                scanf("%d",&dir);
+                if(dir==1) direction="North";
+                else if(dir==2) direction="South";
+                else if(dir==3) direction="NorthEast";
+                else if(dir==4) direction="NorthWest";
+                else if(dir==5) direction="SouthEast";
+                else if(dir==6) direction="SouthWest";
+                flag=movecell(my_node,direction,HeadPlayer1,HeadPlayer2,n,arr);
+                if(flag==1){
+                    printf("Your cell moved successfuly!");
+                    update_map(arr,n,energy,NumofEnergy,HeadPlayer1,HeadPlayer2,NumofPlayers);
+                    if(NumofPlayers==2)turn++;
+                }
+                else{
+                    printf("Cannot move to that place!");
+                }
+                Sleep(500);
+                system("cls");
+            }
+            else if(mode==2){
+                int dx,dy;
+                int flag;
+                flag=check_for_split(&my_node,&HeadPlayer1,&HeadPlayer2,n,arr,&dx,&dy);
+                if(flag==-1)printf("You cant split the cell because the cell's energy is less than 80!\n\n");
+                else if(flag==-2)printf("You cant split the cell because the cell is not on splitting place\n\n");
+                else if(flag==-3)printf("You cant split the cell because there is no place for new cell\n\n");
+                else{
+                    node *new_cell1,*new_cell2;
+                    char *name1,*name2;
+                    printf("Please enter the new name of the cell: ");
+                    fflush(stdin);
+                    getstring(&name1);
+                    printf("Please enter the name of the new cell: ");
+                    fflush(stdin);
+                    getstring(&name2);
+                    mitosis(&my_node,&HeadPlayer1,&HeadPlayer2,&new_cell1,name1,&new_cell2,name2,n,arr);
+                    printf("Your cell splitted successfuly!\n");
+                    update_map(arr,n,energy,NumofEnergy,HeadPlayer1,HeadPlayer2,NumofPlayers);
+                    if(NumofPlayers==2)turn++;
                     Sleep(500);
                     system("cls");
                 }
