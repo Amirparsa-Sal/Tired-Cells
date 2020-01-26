@@ -125,12 +125,12 @@ int main(){
     int i,n,j;
     char *MapAddress,*player1,*player2;
     int flag=0;
-    if(flag==0){
-        printf("What do you like to do? \n1)Load a game \n2)Make a new single player game \n3)Make a new multiplayer game \n4)Exit\n");
+    while(flag==0){
+        printf("What do you like to do? \n1)Load a game \n2)Make a new single player game \n3)Make a new multiplayer game \n4)Make a map \n5)Exit\n");
         scanf("%d",&mode);
         system("cls");
         //initialize
-        if(mode==4)
+        if(mode==5)
             return 0;
         else if(mode==1){
             char **SavedAdresses;
@@ -143,9 +143,10 @@ int main(){
             //Needs to be checked before loading
             load_game(&HeadPlayer1,&HeadPlayer2,&NumofPlayers,&player1,&player2,&turn,&MapAddress,SavedAdresses[AddressNumber],&energy,&NumofEnergy);
             n=read_map(MapAddress,&arr);
+            flag=1;
             system("cls");
         }
-        else{
+        else if(mode==2 || mode==3){
             //init map
             char **SavedMaps;
             int MapsSize,MapNumber;
@@ -176,6 +177,7 @@ int main(){
                 get_cells(n,&HeadPlayer2,&HeadPlayer1,player2,l2,arr);
                 system("cls");
             }
+            flag=1;
             for(i=0;i<n;i++){
                 for(j=0;j<n;j++){
                     if(arr[i][j]=='1'){
@@ -192,11 +194,14 @@ int main(){
                 }
             }
         }
-        system("cls");
-        flag=1;
-        initwindow(800,800);
-        update_map(arr,n,energy,NumofEnergy,HeadPlayer1,HeadPlayer2,NumofPlayers,1);
+        else if(mode==4){
+            map_editor();
+        }
     }
+    system("cls");
+
+    initwindow(800,800);
+    update_map(arr,n,energy,NumofEnergy,HeadPlayer1,HeadPlayer2,NumofPlayers,1);
     //fflush(stdin);
     while(flag){
         if(turn%2==1)
