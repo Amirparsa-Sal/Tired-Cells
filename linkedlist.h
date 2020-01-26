@@ -36,18 +36,16 @@ void print_list(node *head){
     if(head==NULL)
         return;
     int i=1;
-    for(;head->next!=NULL;head=head->next,i++)
+    for(;head!=NULL;head=head->next,i++)
         printf("%d)%s Pos=(%d,%d) Energy:%d\n",i,head->name,(head->pos).x,(head->pos).y,head->energy);
-    printf("%d)%s Pos=(%d,%d) Energy:%d\n",i,head->name,(head->pos).x,(head->pos).y,head->energy);
     printf("-------------\n");
 }
 int list_size(node *head){
     if(head==NULL)
         return 0;
     int len=0;
-    for(;head->next!=NULL;head=head->next)
+    for(;head!=NULL;head=head->next)
         len++;
-    len++;
 
     return len;
 }

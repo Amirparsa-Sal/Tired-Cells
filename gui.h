@@ -1,21 +1,19 @@
 void update_cells(node *HeadPlayer,int player,int ***pos,int n,int L){
     int x1,y1,x2,y2,x,y,arrx,arry;
     if(player==1){
-
-
+        setcolor(WHITE);
+        setbkcolor(BLACK);
         setfillstyle(1,BLACK);
     }
     else{
-
-
+        setcolor(BLACK);
+        setbkcolor(WHITE);
         setfillstyle(1,WHITE);
     }
-    printf(".");
     settextstyle(8,0,1);
     char energy[5];
-    while(HeadPlayer->next!=NULL){
-
-        itoa(HeadPlayer->energy,energy,10);
+    while(HeadPlayer!=NULL){
+        sprintf(energy,"%d",HeadPlayer->energy);
         x=HeadPlayer->pos.x;
         y=HeadPlayer->pos.y;
         arrx=x;
@@ -26,28 +24,14 @@ void update_cells(node *HeadPlayer,int player,int ***pos,int n,int L){
         y2=pos[arry][arrx][3];
         fillellipse((x1+x2)/2,(y1+y2)/2,L/4,L/4);
         outtextxy(x1+10, y1+10,HeadPlayer->name);
-
+        outtextxy((x1+x2)/2 - 15, (y1+y2)/2-15,energy);
         outtextxy((x1+x2)/2 - 15, (y1+y2)/2-15,energy);
         HeadPlayer=HeadPlayer->next;
     }
-    char tmp[7];
-    itoa(HeadPlayer->energy,tmp,10);
-    x=HeadPlayer->pos.x;
-    y=HeadPlayer->pos.y;
-    arrx=x;
-    arry=n-1-y;
-    x1=pos[arry][arrx][0];
-    y1=pos[arry][arrx][1];
-    x2=pos[arry][arrx][2];
-    y2=pos[arry][arrx][3];
-    fillellipse((x1+x2)/2,(y1+y2)/2,L/4,L/4);
-    outtextxy(x1+10, y1+10,HeadPlayer->name);
-
-    outtextxy((x1+x2)/2 - 15, (y1+y2)/2 -15,tmp);
 }
 void update_map(char **arr,int n,int **energy,int NumofEnergy,node *HeadPlayer1,node *HeadPlayer2,int NumofPlayers,int realplayer1){
     int i,j;
-    int x,y,x1,y1,x2,y2,L;
+    int x1,y1,x2,y2,L;
     int ***pos;
     pos=(int ***)malloc(n*sizeof(int **));
     for(i=0;i<n;i++)

@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include <graphics.h>
 #include <dirent.h>
-#include <winbgim.h>
-#include<string.h>
-#include <ctype.h>
 #include "common.h"
 #include "linkedlist.h"
 #include "file.h"
@@ -151,9 +148,7 @@ int main(){
         else{
             //init map
             char **SavedMaps;
-            char *cellname;
-            node *tmp;
-            int MapsSize,MapNumber,x,y;
+            int MapsSize,MapNumber;
             printf("Please choose on of the following maps:\n");
             read_dir(&SavedMaps,".bin",4,&MapsSize);
             printaddress(SavedMaps,MapsSize,4);

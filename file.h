@@ -86,11 +86,10 @@ int save_game(node *head1,node *head2,int NumOfPlayers,char *Player1Name,char *P
     fwrite(&NumOfPlayers,sizeof(int),1,file);
     fwrite(&l1,sizeof(int),1,file);
     fwrite(&l2,sizeof(int),1,file);
-    while(head1->next!=NULL){
+    while(head1!=NULL){
         fwrite(head1,sizeof(node),1,file);
         head1=head1->next;
     }
-    fwrite(head1,sizeof(node),1,file);
     if(NumOfPlayers==2){
         while(head2->next!=NULL){
             fwrite(head2,sizeof(node),1,file);
@@ -187,7 +186,7 @@ int read_dir(char ***address,char *suffix,int suffix_len,int *arrsize){
     *arrsize=1;
     struct dirent *de;
     bool check;
-    DIR *dr = opendir("C:\\Users\\Adak\\Desktop\\FinalProject");
+    DIR *dr = opendir(".");
     if (dr == NULL){
         printf("Error");
         return -1;
