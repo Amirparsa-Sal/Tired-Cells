@@ -42,7 +42,8 @@ void update_map(char **arr,int n,int **energy,int NumofEnergy,node *HeadPlayer1,
     setfillstyle(1,BLACK);
     bar(0,0,800,800);
     L=780/(n+1);
-    setcolor(WHITE);
+    setcolor(BLACK);
+    setcolor(BLACK);
     for(i=0;i<n;i++){
         for(j=0;j<n;j++){
             if(arr[i][j]=='1') setfillstyle(1,BLUE);
@@ -96,67 +97,115 @@ void update_map(char **arr,int n,int **energy,int NumofEnergy,node *HeadPlayer1,
     }
 }
 void map_editor(){
+    char *name;
+    int mode=0;
     int **energy;
-    int n,i,j;
+    int n=0,i,j;
     char **arr;
     int L;
-    printf("Please enter the size of your map: ");
-    scanf("%d",&n);
-    L=780/(n+1);
-    arr=(char **)malloc(n*sizeof(char *));
-    for(i=0;i<n;i++)
-        arr[i]=(char *)malloc(n*sizeof(char));
-    for(i=0;i<n;i++)
-        for(j=0;j<n;j++)
-            arr[i][j]='1';
-    printf("You can change the map by clicking on the map cells.\nAfter Finishing yor work press any key to finish the map.\nBlue: Energy\nGreen: Mitosis\nRed: Forbidden\nYellow: Normal\n\n");
-    initwindow(800,800);
-    update_map(arr,n,energy,0,NULL,NULL,0,0);
-    while(!kbhit()){
-        if(ismouseclick(WM_LBUTTONDOWN)){
-            int x,y,x1,y1,x2,y2;
-            x=mousex();
-            y=mousey();
-            for(j=0;j<n;j++){
-                x1=10+j*L+L/2;
-                x2=10+(j+1)*L+L/2;
-                if(x>x1 && x<x2)
-                    break;
+    while(mode<=0 || mode>3){
+        system("cls");
+        printf("What do you like to do? \n1)Make your own map \n2)Make a random map \n3)Edit another map\n");
+        scanf("%d",&mode);
+    }
+    if(mode==1 || mode==2){
+        while(n<=0){
+            system("cls");
+            printf("Please enter the size of the map: ");
+            fflush(stdin);
+            scanf("%d",&n);
+        }
+        printf("Please enter the name of the map: ");
+        fflush(stdin);
+        getstring(&name);
+        system("cls");
+    }
+    if(mode==1 || mode==3){
+        if(mode==1){
+            arr=(char **)malloc(n*sizeof(char *));
+            for(i=0;i<n;i++)
+                arr[i]=(char *)malloc(n*sizeof(char));
+            for(i=0;i<n;i++)
+                for(j=0;j<n;j++)
+                    arr[i][j]='1';
+        }
+        else{
+            char **SavedMaps;
+            int MapsSize,MapNumber=0,len;
+            read_dir(&SavedMaps,".bin",4,&MapsSize);
+            system("cls");
+            if(MapsSize==0){
+                printf("There is no map to load!");
+                Sleep(1000);
+                return;
             }
-            if(j==n)
-                continue;
-            if(j%2==0){
-                for(i=0;i<n;i++){
-                    y1=10+(i*L)+L/4;
-                    y2=10+((i+1)*L)+L/4;
-                    if(y>y1 && y<y2)
+            while(MapNumber<=0 || MapNumber>MapsSize){
+                printf("Please choose one of the following maps:\n");
+                read_dir(&SavedMaps,".bin",4,&MapsSize);
+                printaddress(SavedMaps,MapsSize,4);
+                fflush(stdin);
+                scanf("%d",&MapNumber);
+                system("cls");
+            }
+            MapNumber--;
+            n=read_map(SavedMaps[MapNumber],&arr);
+            name=SavedMaps[MapNumber];
+            len=strlength(name);
+            name=(char *)realloc(name,(len-4)*sizeof(char));
+            name[len-5]='\0';
+        }
+        L=780/(n+1);
+        printf("You can change the map by clicking on the map cells.\nAfter Finishing yor work press any key to finish the map.\nBlue: Energy\nGreen: Mitosis\nRed: Forbidden\nYellow: Normal\n\n");
+        initwindow(800,800);
+        update_map(arr,n,energy,0,NULL,NULL,0,0);
+        while(!kbhit()){
+            if(ismouseclick(WM_LBUTTONDOWN)){
+                int x,y,x1,y1,x2,y2;
+                x=mousex();
+                y=mousey();
+                for(j=0;j<n;j++){
+                    x1=10+j*L+L/2;
+                    x2=10+(j+1)*L+L/2;
+                    if(x>x1 && x<x2)
                         break;
                 }
-            }
-            else{
-                for(i=0;i<n;i++){
-                    y1=10+(i*L)+3*L/4;
-                    y2=10+((i+1)*L)+3*L/4;
-                    if(y>y1 && y<y2)
-                        break;
+                if(j==n)
+                    continue;
+                if(j%2==0){
+                    for(i=0;i<n;i++){
+                        y1=10+(i*L)+L/4;
+                        y2=10+((i+1)*L)+L/4;
+                        if(y>y1 && y<y2)
+                            break;
+                    }
                 }
+                else{
+                    for(i=0;i<n;i++){
+                        y1=10+(i*L)+3*L/4;
+                        y2=10+((i+1)*L)+3*L/4;
+                        if(y>y1 && y<y2)
+                            break;
+                    }
+                }
+                if(i==n)
+                    continue;
+                arr[i][j]+=1;
+                if(arr[i][j]=='5')
+                    arr[i][j]='1';
+                update_map(arr,n,energy,0,NULL,NULL,0,0);
+                clearmouseclick(WM_LBUTTONDOWN);
             }
-            if(i==n)
-                continue;
-            arr[i][j]+=1;
-            if(arr[i][j]=='5')
-                arr[i][j]='1';
-            update_map(arr,n,energy,0,NULL,NULL,0,0);
-            clearmouseclick(WM_LBUTTONDOWN);
         }
     }
-    char *name;
-    printf("Please enter the name of the map: ");
-    fflush(stdin);
-    getstring(&name);
-    make_map(name,n,arr);
+
+
+    if(mode==1 || mode ==3)
+        make_map(name,n,arr);
+    else if(mode==2)
+        random_map(name,n);
     printf("Your map has been saved!");
-    closegraph();
+    if(mode==1 || mode==3)
+        closegraph();
     Sleep(1000);
     system("cls");
 }

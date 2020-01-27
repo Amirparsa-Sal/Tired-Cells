@@ -1,6 +1,13 @@
 int make_map(char *name,int map_size,char **arr){
-    int i,j;
+    int i,j,len;
     FILE *file;
+    len=strlength(name);
+    name=(char *)realloc(name,(len+4)*sizeof(char));
+    name[len-1]='.';
+    name[len]='b';
+    name[len+1]='i';
+    name[len+2]='n';
+    name[len+3]='\0';
     file=fopen(name,"wb");
     if(file==NULL){
         printf("ERROR");
@@ -15,9 +22,16 @@ int make_map(char *name,int map_size,char **arr){
 }
 int random_map(char *name,int map_size){
     srand(time(NULL));
-    int i,j,x;
+    int i,j,x,len;
     char c;
     FILE *file;
+    len=strlength(name);
+    name=(char *)realloc(name,(len+4)*sizeof(char));
+    name[len-1]='.';
+    name[len]='b';
+    name[len+1]='i';
+    name[len+2]='n';
+    name[len+3]='\0';
     file=fopen(name,"wb");
     if(file==NULL){
         printf("ERROR");
@@ -68,28 +82,34 @@ int save_game(node *head1,node *head2,int NumOfPlayers,char *Player1Name,char *P
     for(i=0;i<len;i++){
         fwrite(&(map_address[i]),sizeof(char),1,file);
     }
+    fwrite(&NumOfPlayers,sizeof(int),1,file);
     for(len=1;;len++)
         if(Player1Name[len-1]=='\0')
             break;
     for(i=0;i<len;i++){
         fwrite(&(Player1Name[i]),sizeof(char),1,file);
     }
-    for(len=1;;len++)
-        if(Player2Name[len-1]=='\0')
-            break;
-    for(i=0;i<len;i++){
-        fwrite(&(Player2Name[i]),sizeof(char),1,file);
+    if(NumOfPlayers==2){
+        for(len=1;;len++)
+            if(Player2Name[len-1]=='\0')
+                break;
+        for(i=0;i<len;i++){
+            fwrite(&(Player2Name[i]),sizeof(char),1,file);
+        }
     }
     l1=list_size(head1);
     if(NumOfPlayers==2)
         l2=list_size(head2);
-    fwrite(&NumOfPlayers,sizeof(int),1,file);
+
     fwrite(&l1,sizeof(int),1,file);
-    fwrite(&l2,sizeof(int),1,file);
+    if(NumOfPlayers==2)
+        fwrite(&l2,sizeof(int),1,file);
+
     while(head1!=NULL){
         fwrite(head1,sizeof(node),1,file);
         head1=head1->next;
     }
+
     if(NumOfPlayers==2){
         while(head2->next!=NULL){
             fwrite(head2,sizeof(node),1,file);
@@ -127,6 +147,7 @@ int load_game(node **head1,node **head2,int *NumOfPlayers,char **Player1Name,cha
     }
     (*map_address)[cnt]='\0';
     cnt=0;
+    fread(NumOfPlayers,sizeof(int),1,file);
     (*Player1Name)=(char *)malloc(sizeof(char));
     fread(&c,sizeof(char),1,file);
     while(c!='\0'){
@@ -137,19 +158,21 @@ int load_game(node **head1,node **head2,int *NumOfPlayers,char **Player1Name,cha
     }
     (*Player1Name)[cnt]='\0';
     cnt=0;
-    (*Player2Name)=(char *)malloc(sizeof(char));
-    fread(&c,sizeof(char),1,file);
-    while(c!='\0'){
-        (*Player2Name)[cnt]=c;
-        cnt++;
-        (*Player2Name)=(char *)realloc((*Player2Name),(cnt+1)*sizeof(char));
+    if(*NumOfPlayers==2){
+        (*Player2Name)=(char *)malloc(sizeof(char));
         fread(&c,sizeof(char),1,file);
-    }
-    (*Player2Name)[cnt]='\0';
+        while(c!='\0'){
+            (*Player2Name)[cnt]=c;
+            cnt++;
+            (*Player2Name)=(char *)realloc((*Player2Name),(cnt+1)*sizeof(char));
+            fread(&c,sizeof(char),1,file);
+        }
+        (*Player2Name)[cnt]='\0';
 
-    fread(NumOfPlayers,sizeof(int),1,file);
+    }
     fread(&l1,sizeof(int),1,file);
-    fread(&l2,sizeof(int),1,file);
+    if(*NumOfPlayers==2)
+        fread(&l2,sizeof(int),1,file);
     (*head1)=create_node(*head1,0,0,0,"tmp");
     fread(*head1,sizeof(node),1,file);
     tmp=*head1;
@@ -158,7 +181,7 @@ int load_game(node **head1,node **head2,int *NumOfPlayers,char **Player1Name,cha
         fread(tmp->next,sizeof(node),1,file);
         tmp=tmp->next;
     }
-    if(l2!=0){
+    if(*NumOfPlayers==2){
         (*head2)=create_node(*head2,0,0,0,"tmp");
         fread(*head2,sizeof(node),1,file);
         tmp=*head2;
