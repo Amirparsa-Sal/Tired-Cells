@@ -49,9 +49,7 @@ int get_energy(node *my_node,int n,char **arr,int **energy,int NumofEnergy){
     tmp=energy[find_energy(y,x,energy,NumofEnergy)][2];
     if(tmp==0)
         return -3;
-    printf("tmp:%d\n",tmp);
     energy[find_energy(y,x,energy,NumofEnergy)][2]-=find_min(15,energy[find_energy(y,x,energy,NumofEnergy)][2],100-my_node->energy);
-    printf("final:%d\n",energy[find_energy(y,x,energy,NumofEnergy)][2]);
     my_node->energy+=find_min(15,tmp,100-my_node->energy);
     return 1;
 }
@@ -190,8 +188,8 @@ void get_cells(int n,node **HeadPlayer1,node **HeadPlayer2,char *player1,int len
         y=rand()%n;
     }
     (*HeadPlayer1)=create_node((*HeadPlayer1),x,y,100,"");
-    fflush(stdin);
     printf("%s, Please enter the name of cell%d: ",player1,1);
+    fflush(stdin);
     getcellname((*HeadPlayer1)->name);
     printf("%s added\n",(*HeadPlayer1)->name);
     tmp=(*HeadPlayer1);

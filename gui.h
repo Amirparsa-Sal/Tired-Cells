@@ -10,10 +10,8 @@ void update_cells(node *HeadPlayer,int player,int ***pos,int n,int L){
         setbkcolor(WHITE);
         setfillstyle(1,WHITE);
     }
-    settextstyle(8,0,1);
-    char energy[5];
+    settextstyle(3,0,1);
     while(HeadPlayer!=NULL){
-        sprintf(energy,"%d",HeadPlayer->energy);
         x=HeadPlayer->pos.x;
         y=HeadPlayer->pos.y;
         arrx=x;
@@ -23,9 +21,19 @@ void update_cells(node *HeadPlayer,int player,int ***pos,int n,int L){
         x2=pos[arry][arrx][2];
         y2=pos[arry][arrx][3];
         fillellipse((x1+x2)/2,(y1+y2)/2,L/4,L/4);
-        outtextxy(x1+10, y1+10,HeadPlayer->name);
-        outtextxy((x1+x2)/2 - 15, (y1+y2)/2-15,energy);
-        outtextxy((x1+x2)/2 - 15, (y1+y2)/2-15,energy);
+        if(n<10){
+            char energy[5];
+            char name[4];
+            sprintf(energy,"%d",HeadPlayer->energy);
+            name[0]=HeadPlayer->name[0];
+            name[1]=HeadPlayer->name[1];
+            name[2]=HeadPlayer->name[2];
+            name[3]='\0';
+            outtextxy(x1, y1,name);
+            outtextxy((x1+x2)/2 - 15, (y1+y2)/2-15,energy);
+            outtextxy((x1+x2)/2 - 15, (y1+y2)/2-15,energy);
+        }
+
         HeadPlayer=HeadPlayer->next;
     }
 }
@@ -68,6 +76,7 @@ void update_map(char **arr,int n,int **energy,int NumofEnergy,node *HeadPlayer1,
             rectangle(x1,y1,x2,y2);
         }
     }
+    settextstyle(3,0,1);
     for(i=0;i<NumofEnergy;i++){
         setbkcolor(BLACK);
         int en=energy[i][2];
@@ -80,6 +89,12 @@ void update_map(char **arr,int n,int **energy,int NumofEnergy,node *HeadPlayer1,
         setfillstyle(4,BLUE);
         bar(x1,y1,x1+(en/100.0)*L,y2);
         rectangle(x1,y1,x2,y2);
+        setbkcolor(BLUE);
+        char energy[4];
+        sprintf(energy,"%d",en);
+        energy[3]='\0';
+
+        outtextxy(x1,y2-25,energy);
     }
     if(HeadPlayer1!=NULL){
         if(realplayer1==1)

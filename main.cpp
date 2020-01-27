@@ -72,7 +72,7 @@ void PlayTheTurn(node **HeadPlayer,node **HeadOtherPlayer,char *player,char *Oth
                 printf("Your cell splitted successfuly!\n");
                 update_map(arr,n,energy,NumofEnergy,*HeadPlayer,*HeadOtherPlayer,NumofPlayers,realplayer1);
                 if(NumofPlayers==2)(*turn)++;
-                Sleep(500);
+                Sleep(1000);
                 system("cls");
             }
 
@@ -87,7 +87,7 @@ void PlayTheTurn(node **HeadPlayer,node **HeadOtherPlayer,char *player,char *Oth
                 printf("Your cell got energy successfuly!\n");
                 update_map(arr,n,energy,NumofEnergy,*HeadPlayer,*HeadOtherPlayer,NumofPlayers,realplayer1);
                 if(NumofPlayers==2)(*turn)++;
-                Sleep(500);
+                Sleep(1000);
                 system("cls");
             }
         }
@@ -124,7 +124,6 @@ int main(){
     node *HeadPlayer1=NULL,*HeadPlayer2=NULL;
     int **energy;
     char **arr;
-
     int NumofPlayers=1,turn=1,mode,NumofEnergy=0,l1,l2;
     int i,n,j;
     char *MapAddress,*player1,*player2;
@@ -159,7 +158,6 @@ int main(){
             load_game(&HeadPlayer1,&HeadPlayer2,&NumofPlayers,&player1,&player2,&turn,&MapAddress,SavedAdresses[AddressNumber],&energy,&NumofEnergy);
             n=read_map(MapAddress,&arr);
             flag=1;
-
         }
         else if(mode==2 || mode==3){
             //init map
@@ -223,7 +221,6 @@ int main(){
         }
     }
     system("cls");
-
     initwindow(800,800);
     update_map(arr,n,energy,NumofEnergy,HeadPlayer1,HeadPlayer2,NumofPlayers,1);
     //fflush(stdin);
