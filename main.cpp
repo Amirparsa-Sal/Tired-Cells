@@ -23,6 +23,7 @@ void PlayTheTurn(node **HeadPlayer,node **HeadOtherPlayer,char *player,char *Oth
         system("cls");
         printf("%s, What do you like to do with your cell? (Cell Name= %s)\n",player,my_node->name);
         printf("1)Move \n2)Split Cell \n3)Boost Energy \n4)Save \n5)Exit\n");
+        fflush(stdin);
         scanf("%d",&mode);
         system("cls");
         if(mode==1){
@@ -32,6 +33,7 @@ void PlayTheTurn(node **HeadPlayer,node **HeadOtherPlayer,char *player,char *Oth
                 system("cls");
                 printf("Please enter the direction you want:\n");
                 printf("1)North \n2)South \n3)NorthEast \n4)NorthWest \n5)SouthEast \n6)SouthWest\n");
+                fflush(stdin);
                 scanf("%d",&dir);
             }
             if(dir==1) direction="North";
@@ -124,7 +126,7 @@ int main(){
     node *HeadPlayer1=NULL,*HeadPlayer2=NULL;
     int **energy;
     char **arr;
-    int NumofPlayers=1,turn=1,mode,NumofEnergy=0,l1,l2;
+    int NumofPlayers=1,turn=1,mode,NumofEnergy=0,l1=0,l2=0;
     int i,n,j;
     char *MapAddress,*player1,*player2;
     int flag=0;
@@ -185,8 +187,13 @@ int main(){
             fflush(stdin);
             getstring(&player1);
             //must check for available
-            printf("%s, Please enter the number of cells you want: ",player1);
-            scanf("%d",&l1);
+            while(l1<=0){
+                system("cls");
+                printf("%s, Please enter the number of cells you want: ",player1);
+                fflush(stdin);
+                scanf("%d",&l1);
+            }
+            system("cls");
             get_cells(n,&HeadPlayer1,&HeadPlayer2,player1,l1,arr);
             system("cls");
             if(mode==3){
@@ -194,8 +201,13 @@ int main(){
                 printf("Please enter the name of Player2: ");
                 fflush(stdin);
                 getstring(&player2);
-                printf("%s, Please enter the number of cells you want: ",player2);
-                scanf("%d",&l2);
+                while(l2<=0){
+                    system("cls");
+                    printf("%s, Please enter the number of cells you want: ",player2);
+                    fflush(stdin);
+                    scanf("%d",&l2);
+                }
+                system("cls");
                 get_cells(n,&HeadPlayer2,&HeadPlayer1,player2,l2,arr);
                 system("cls");
             }
