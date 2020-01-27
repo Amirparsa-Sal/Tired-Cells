@@ -74,9 +74,9 @@ void PlayTheTurn(node **HeadPlayer,node **HeadOtherPlayer,char *player,char *Oth
                 printf("Your cell splitted successfuly!\n");
                 update_map(arr,n,energy,NumofEnergy,*HeadPlayer,*HeadOtherPlayer,NumofPlayers,realplayer1);
                 if(NumofPlayers==2)(*turn)++;
-                Sleep(1000);
-                system("cls");
             }
+            Sleep(1000);
+            system("cls");
 
         }
         else if(mode==3){
@@ -133,6 +133,7 @@ int main(){
     while(flag==0){
         system("cls");
         printf("What do you like to do? \n1)Load a game \n2)Make a new single player game \n3)Make a new multiplayer game \n4)Make a map \n5)Exit\n");
+        fflush(stdin);
         scanf("%d",&mode);
         system("cls");
         //initialize
@@ -182,33 +183,56 @@ int main(){
             MapNumber--;
             n=read_map(SavedMaps[MapNumber],&arr);
             MapAddress=SavedMaps[MapNumber];
-            //init heads
+            //check for number of available points
+            int available=1;
+            point *points;
+            points=(point *)malloc(sizeof(point));
+            for(i=0;i<n;i++){
+                for(j=0;j<n;j++){
+                    if(arr[n-1-j][i]!='3'){
+                        points[available-1].x=i;
+                        points[available-1].y=j;
+                        available++;
+                        points=(point *)realloc(points,available*sizeof(point));
+                    }
+                }
+            }
+            available--;
+            points=(point *)realloc(points,available*sizeof(point));
+            //init nodes
             printf("Please enter the name of Player1: ");
             fflush(stdin);
             getstring(&player1);
-            //must check for available
-            while(l1<=0){
+            while(l1<=0 || l1>available){
                 system("cls");
+                printf("Number of available places on the map: %d\n\n",available);
                 printf("%s, Please enter the number of cells you want: ",player1);
                 fflush(stdin);
                 scanf("%d",&l1);
+                if(l1>available)
+                    printf("The map does not have enough places for this number of cells!");
             }
             system("cls");
-            get_cells(n,&HeadPlayer1,&HeadPlayer2,player1,l1,arr);
+            get_cells(n,&HeadPlayer1,&HeadPlayer2,player1,l1,arr,&points,&available);
             system("cls");
             if(mode==3){
                 NumofPlayers=2;
                 printf("Please enter the name of Player2: ");
                 fflush(stdin);
                 getstring(&player2);
-                while(l2<=0){
+                while(l2<=0 || l2>available){
                     system("cls");
+                    printf("Number of available places on the map: %d\n\n",available);
                     printf("%s, Please enter the number of cells you want: ",player2);
                     fflush(stdin);
                     scanf("%d",&l2);
+                    if(l2>available){
+                        printf("The map does not have enough places for this number of cells!");
+                        Sleep(1000);
+                    }
                 }
                 system("cls");
-                get_cells(n,&HeadPlayer2,&HeadPlayer1,player2,l2,arr);
+                get_cells(n,&HeadPlayer2,&HeadPlayer1,player2,l2,arr,&points,&available);
                 system("cls");
             }
             flag=1;

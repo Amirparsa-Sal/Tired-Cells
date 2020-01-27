@@ -170,7 +170,7 @@ void map_editor(){
             name[len-5]='\0';
         }
         L=780/(n+1);
-        printf("You can change the map by clicking on the map cells.\nAfter Finishing yor work press any key to finish the map.\nBlue: Energy\nGreen: Mitosis\nRed: Forbidden\nYellow: Normal\n\n");
+        printf("You can change the map by clicking on the map cells.\nYou can reset the map by right click \nAfter Finishing your work press any key to finish the map.\nBlue: Energy\nGreen: Mitosis\nRed: Forbidden\nYellow: Normal\n\n");
         initwindow(800,800);
         update_map(arr,n,energy,0,NULL,NULL,0,0);
         while(!kbhit()){
@@ -209,6 +209,14 @@ void map_editor(){
                     arr[i][j]='1';
                 update_map(arr,n,energy,0,NULL,NULL,0,0);
                 clearmouseclick(WM_LBUTTONDOWN);
+
+            }
+            else if(ismouseclick(WM_RBUTTONDOWN)){
+                for(i=0;i<n;i++)
+                    for(j=0;j<n;j++)
+                        arr[i][j]='1';
+                update_map(arr,n,energy,0,NULL,NULL,0,0);
+                clearmouseclick(WM_RBUTTONDOWN);
             }
         }
     }

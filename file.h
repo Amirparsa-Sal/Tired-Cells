@@ -76,46 +76,18 @@ int save_game(node *head1,node *head2,int NumOfPlayers,char *Player1Name,char *P
         printf("ERROR");
         return -1;
     }
-    for(len=1;;len++)
-        if(map_address[len-1]=='\0')
-            break;
-    for(i=0;i<len;i++){
+    len=strlength(map_address);
+    for(i=0;i<len;i++)
         fwrite(&(map_address[i]),sizeof(char),1,file);
-    }
     fwrite(&NumOfPlayers,sizeof(int),1,file);
-    for(len=1;;len++)
-        if(Player1Name[len-1]=='\0')
-            break;
-    for(i=0;i<len;i++){
+    len=strlength(Player1Name);
+    for(i=0;i<len;i++)
         fwrite(&(Player1Name[i]),sizeof(char),1,file);
-    }
-    if(NumOfPlayers==2){
-        for(len=1;;len++)
-            if(Player2Name[len-1]=='\0')
-                break;
-        for(i=0;i<len;i++){
-            fwrite(&(Player2Name[i]),sizeof(char),1,file);
-        }
-    }
     l1=list_size(head1);
-    if(NumOfPlayers==2)
-        l2=list_size(head2);
-
     fwrite(&l1,sizeof(int),1,file);
-    if(NumOfPlayers==2)
-        fwrite(&l2,sizeof(int),1,file);
-
     while(head1!=NULL){
         fwrite(head1,sizeof(node),1,file);
         head1=head1->next;
-    }
-
-    if(NumOfPlayers==2){
-        while(head2->next!=NULL){
-            fwrite(head2,sizeof(node),1,file);
-            head2=head2->next;
-        }
-        fwrite(head2,sizeof(node),1,file);
     }
     fwrite(&turn,sizeof(int),1,file);
     fwrite(&NumofEnergy,sizeof(int),1,file);
@@ -123,6 +95,17 @@ int save_game(node *head1,node *head2,int NumOfPlayers,char *Player1Name,char *P
         fwrite(&energy[i][0],sizeof(int),1,file);
         fwrite(&energy[i][1],sizeof(int),1,file);
         fwrite(&energy[i][2],sizeof(int),1,file);
+    }
+    if(NumOfPlayers==2){
+        len=strlength(Player2Name);
+        for(i=0;i<len;i++)
+            fwrite(&(Player2Name[i]),sizeof(char),1,file);
+        l2=list_size(head2);
+        fwrite(&l2,sizeof(int),1,file);
+        while(head2!=NULL){
+            fwrite(head2,sizeof(node),1,file);
+            head2=head2->next;
+        }
     }
     fclose(file);
     return 0;
@@ -157,22 +140,9 @@ int load_game(node **head1,node **head2,int *NumOfPlayers,char **Player1Name,cha
         fread(&c,sizeof(char),1,file);
     }
     (*Player1Name)[cnt]='\0';
-    cnt=0;
-    if(*NumOfPlayers==2){
-        (*Player2Name)=(char *)malloc(sizeof(char));
-        fread(&c,sizeof(char),1,file);
-        while(c!='\0'){
-            (*Player2Name)[cnt]=c;
-            cnt++;
-            (*Player2Name)=(char *)realloc((*Player2Name),(cnt+1)*sizeof(char));
-            fread(&c,sizeof(char),1,file);
-        }
-        (*Player2Name)[cnt]='\0';
 
-    }
     fread(&l1,sizeof(int),1,file);
-    if(*NumOfPlayers==2)
-        fread(&l2,sizeof(int),1,file);
+
     (*head1)=create_node(*head1,0,0,0,"tmp");
     fread(*head1,sizeof(node),1,file);
     tmp=*head1;
@@ -180,16 +150,6 @@ int load_game(node **head1,node **head2,int *NumOfPlayers,char **Player1Name,cha
         tmp->next=create_node(tmp->next,0,0,100,"tmp");
         fread(tmp->next,sizeof(node),1,file);
         tmp=tmp->next;
-    }
-    if(*NumOfPlayers==2){
-        (*head2)=create_node(*head2,0,0,0,"tmp");
-        fread(*head2,sizeof(node),1,file);
-        tmp=*head2;
-        for(;l2-1>0;l2--){
-            tmp->next=create_node(tmp->next,0,0,100,"tmp");
-            fread(tmp->next,sizeof(node),1,file);
-            tmp=tmp->next;
-        }
     }
     fread(turn,sizeof(int),1,file);
     fread(NumofEnergy,sizeof(int),1,file);
@@ -201,6 +161,32 @@ int load_game(node **head1,node **head2,int *NumOfPlayers,char **Player1Name,cha
         fread(&((*energy)[i][1]),sizeof(int),1,file);
         fread(&((*energy)[i][2]),sizeof(int),1,file);
     }
+
+
+    if(*NumOfPlayers==2){
+        cnt=0;
+        (*Player2Name)=(char *)malloc(sizeof(char));
+        fread(&c,sizeof(char),1,file);
+        while(c!='\0'){
+            (*Player2Name)[cnt]=c;
+            cnt++;
+            (*Player2Name)=(char *)realloc((*Player2Name),(cnt+1)*sizeof(char));
+            fread(&c,sizeof(char),1,file);
+        }
+        (*Player2Name)[cnt]='\0';
+
+        fread(&l2,sizeof(int),1,file);
+
+        (*head2)=create_node(*head2,0,0,0,"tmp");
+        fread(*head2,sizeof(node),1,file);
+        tmp=*head2;
+        for(;l2-1>0;l2--){
+            tmp->next=create_node(tmp->next,0,0,100,"tmp");
+            fread(tmp->next,sizeof(node),1,file);
+            tmp=tmp->next;
+        }
+    }
+
     fclose(file);
     return 0;
 }

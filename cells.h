@@ -176,18 +176,18 @@ int movecell(node *my_node,char *direction,node* head1,node *head2,int n,char **
     }
     return 1;
 }
-void get_cells(int n,node **HeadPlayer1,node **HeadPlayer2,char *player1,int len,char **arr){
-    int x,y,i;
+void get_cells(int n,node **HeadPlayer1,node **HeadPlayer2,char *player1,int len,char **arr,point **points,int *available){
+    int x,y,index,i;
     node *tmp;
-    x=rand()%n;
-    y=rand()%n;
-    (*HeadPlayer1)=create_node((*HeadPlayer1),-1,-1,100,"");
-    //needs to be better
-    while(!CheckisAvailable(x,y,n,*HeadPlayer1,*HeadPlayer2,arr)){
-        x=rand()%n;
-        y=rand()%n;
-    }
-    (*HeadPlayer1)=create_node((*HeadPlayer1),x,y,100,"");
+    (*HeadPlayer1)=create_node((*HeadPlayer1),-1,-1,0,"");
+    index=rand()%(*available);
+    x=(*points)[index].x;
+    y=(*points)[index].y;
+    (*points)[index].x=(*points)[(*available)-1].x;
+    (*points)[index].y=(*points)[(*available)-1].y;
+    (*available)--;
+    (*points)=(point *)realloc(*points,(*available)*sizeof(point));
+    (*HeadPlayer1)=create_node((*HeadPlayer1),x,y,0,"");
     printf("%s, Please enter the name of cell%d: ",player1,1);
     fflush(stdin);
     getcellname((*HeadPlayer1)->name);
@@ -195,13 +195,14 @@ void get_cells(int n,node **HeadPlayer1,node **HeadPlayer2,char *player1,int len
     tmp=(*HeadPlayer1);
     for(i=1;i<len;i++){
         printf("%s, Please enter the name of cell%d: ",player1,i+1);
-        x=rand()%n;
-        y=rand()%n;
-        while(!CheckisAvailable(x,y,n,*HeadPlayer1,*HeadPlayer2,arr)){
-            x=rand()%n;
-            y=rand()%n;
-        }
-        tmp->next=create_node(tmp->next,x,y,100,"");
+        index=rand()%(*available);
+        x=(*points)[index].x;
+        y=(*points)[index].y;
+        (*points)[index].x=(*points)[(*available)-1].x;
+        (*points)[index].y=(*points)[(*available)-1].y;
+        (*available)--;
+        (*points)=(point *)realloc(*points,(*available)*sizeof(point));
+        tmp->next=create_node(tmp->next,x,y,0,"");
         fflush(stdin);
         getcellname(tmp->next->name);
         tmp=tmp->next;
