@@ -111,6 +111,31 @@ void update_map(char **arr,int n,int **energy,int NumofEnergy,node *HeadPlayer1,
         }
     }
 }
+void find_block(int x,int y,int *i,int *j,int n){
+    int x1,y1,x2,y2,L=780/(n+1);
+    for(*j=0;*j<n;(*j)++){
+        x1=10+*j*L+L/2;
+        x2=10+(*j+1)*L+L/2;
+        if(x>x1 && x<x2)
+            break;
+    }
+    if(*j%2==0){
+        for(*i=0;*i<n;(*i)++){
+            y1=10+((*i)*L)+L/4;
+            y2=10+(((*i)+1)*L)+L/4;
+            if(y>y1 && y<y2)
+                break;
+        }
+    }
+    else{
+        for(*i=0;*i<n;(*i)++){
+            y1=10+((*i)*L)+3*L/4;
+            y2=10+(((*i)+1)*L)+3*L/4;
+            if(y>y1 && y<y2)
+                break;
+            }
+    }
+}
 void map_editor(){
     char *name;
     int mode=0;
@@ -170,7 +195,7 @@ void map_editor(){
             name[len-5]='\0';
         }
         L=780/(n+1);
-        printf("You can change the map by clicking on the map cells.\nYou can reset the map by right click \nAfter Finishing your work press any key to finish the map.\nBlue: Energy\nGreen: Mitosis\nRed: Forbidden\nYellow: Normal\n\n");
+        printf("You can change the map by clicking on the map blocks.\nYou can reset each block by right click.Also you can reset all of blocks by right click outside the map.\nAfter Finishing your work press any key to finish the map.\nBlue: Energy\nGreen: Mitosis\nRed: Forbidden\nYellow: Normal\n\n");
         initwindow(800,800);
         update_map(arr,n,energy,0,NULL,NULL,0,0);
         while(!kbhit()){
@@ -178,31 +203,8 @@ void map_editor(){
                 int x,y,x1,y1,x2,y2;
                 x=mousex();
                 y=mousey();
-                for(j=0;j<n;j++){
-                    x1=10+j*L+L/2;
-                    x2=10+(j+1)*L+L/2;
-                    if(x>x1 && x<x2)
-                        break;
-                }
-                if(j==n)
-                    continue;
-                if(j%2==0){
-                    for(i=0;i<n;i++){
-                        y1=10+(i*L)+L/4;
-                        y2=10+((i+1)*L)+L/4;
-                        if(y>y1 && y<y2)
-                            break;
-                    }
-                }
-                else{
-                    for(i=0;i<n;i++){
-                        y1=10+(i*L)+3*L/4;
-                        y2=10+((i+1)*L)+3*L/4;
-                        if(y>y1 && y<y2)
-                            break;
-                    }
-                }
-                if(i==n)
+                find_block(x,y,&i,&j,n);
+                if(i==n || j==n)
                     continue;
                 arr[i][j]+=1;
                 if(arr[i][j]=='5')
@@ -212,9 +214,17 @@ void map_editor(){
 
             }
             else if(ismouseclick(WM_RBUTTONDOWN)){
-                for(i=0;i<n;i++)
-                    for(j=0;j<n;j++)
-                        arr[i][j]='1';
+                int x,y;
+                x=mousex();
+                y=mousey();
+                find_block(x,y,&i,&j,n);
+                if(i==n || j==n){
+                    for(i=0;i<n;i++)
+                        for(j=0;j<n;j++)
+                            arr[i][j]='1';
+                }
+                else
+                    arr[i][j]='1';
                 update_map(arr,n,energy,0,NULL,NULL,0,0);
                 clearmouseclick(WM_RBUTTONDOWN);
             }
