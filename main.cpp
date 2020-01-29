@@ -253,7 +253,7 @@ int main(){
             }
         }
         else if(mode==4){
-            map_editor();
+            system("MapEditor.exe");
         }
     }
     system("cls");
